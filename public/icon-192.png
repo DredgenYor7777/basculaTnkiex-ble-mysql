@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Fondo -->
+  <rect width="512" height="512" fill="#0a0a0a" rx="120"/>
+
+  <!-- Báscula -->
+  <rect x="156" y="180" width="200" height="40" fill="#FFC107" rx="10"/>
+  <rect x="196" y="220" width="120" height="20" fill="#FFC107" rx="5"/>
+
+  <!-- Display digital -->
+  <rect x="186" y="190" width="140" height="20" fill="#0a0a0a" rx="5"/>
+  <text x="256" y="206" font-family="monospace" font-size="18" font-weight="bold" fill="#FFC107" text-anchor="middle">92.5</text>
+
+  <!-- Peso símbolo -->
+  <circle cx="256" cy="300" r="60" fill="none" stroke="#FFC107" stroke-width="8"/>
+  <text x="256" y="315" font-family="Arial" font-size="40" font-weight="bold" fill="#FFC107" text-anchor="middle">kg</text>
+
+  <!-- Decoración -->
+  <circle cx="256" cy="400" r="4" fill="#FFC107"/>
+  <circle cx="230" cy="400" r="4" fill="#FFC107"/>
+  <circle cx="282" cy="400" r="4" fill="#FFC107"/>
+</svg>

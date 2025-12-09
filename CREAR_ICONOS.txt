@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════════
+  CREAR ICONOS PARA LA PWA
+═══════════════════════════════════════════════════════
+
+Ya está creado el archivo: public/icon.svg
+
+OPCIÓN 1: Usar convertidor online (MÁS FÁCIL)
+────────────────────────────────────────────────────────
+1. Ve a: https://convertio.co/es/svg-png/
+2. Sube el archivo: public/icon.svg
+3. Descarga en estos tamaños:
+   - icon-192.png (192x192 píxeles)
+   - icon-512.png (512x512 píxeles)
+4. Guarda ambos archivos en: public/
+
+OPCIÓN 2: Instalar herramientas y ejecutar script
+────────────────────────────────────────────────────────
+pip install pillow cairosvg
+python crear_iconos.py
+
+OPCIÓN 3: Crear iconos personalizados
+────────────────────────────────────────────────────────
+Usa cualquier editor de imágenes (Photoshop, GIMP, Canva)
+y crea dos imágenes:
+- 192x192 píxeles → Guardar como: public/icon-192.png
+- 512x512 píxeles → Guardar como: public/icon-512.png
+
+Recomendaciones de diseño:
+- Fondo negro (#0a0a0a)
+- Icono/texto amarillo (#FFC107)
+- Simple y minimalista
+- Tema relacionado con báscula/peso
+
+════════════════════════════════════════════════════════
+
+MIENTRAS TANTO: Puedes usar el SVG directamente
+El navegador mostrará un icono genérico hasta que crees
+los PNG, pero la PWA funcionará perfectamente.
+
+════════════════════════════════════════════════════════

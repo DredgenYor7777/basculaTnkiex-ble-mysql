@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Báscula - Tiempo real</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Sistema inteligente de báscula con recomendaciones de salud personalizadas">
+    <meta name="theme-color" content="#FFC107">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Báscula">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestor de datos de usuarios - Peso corporal</h1>
+        
+        <div class="grid">
+            <!-- Panel izquierdo -->
+            <div>
+                <!-- Última lectura -->
+                <div class="card ultima-lectura">
+                    <h2>Última lectura</h2>
+                    <div class="peso-display" id="peso-actual">—</div>
+                    <div class="usuario-display">Usuario: <span id="usuario-actual">Sin seleccionar</span></div>
+                    <div class="fecha-display" id="fecha-actual">Esperando datos...</div>
+                    <span class="status desconectado" id="status-conexion">Desconectado</span>
+                </div>
+                
+                <!-- Gráfica -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3>Gráfica (Últimas 50)</h3>
+                    <div class="chart-container">
+                        <canvas id="chartPeso"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel derecho - Chatbot -->
+            <div class="card chatbot">
+                <h3>Chatbot</h3>
+                <div class="chat-messages" id="chat-messages">
+                    <p style="color: #999;">Haz una pregunta sobre las lecturas...</p>
+                </div>
+                <div class="chat-input-group">
+                    <input type="text" id="chat-input" placeholder="Pregunta (ej. dame un plan)">
+                    <button onclick="enviarPregunta()">Enviar</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial -->
+        <div class="card">
+            <h3>Usuarios recientes</h3>
+            <div class="historial-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Peso (kg)</th>
+                            <th>Altura (m)</th>
+                            <th>Fecha</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-historial">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #999;">Cargando...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de captura de nombre y altura -->
+    <div id="modal-nombre" class="modal-overlay hidden">
+        <div class="modal">
+            <h2>Nueva medición registrada</h2>
+            <div class="modal-body">
+                <div class="peso-grande" id="modal-peso-display">-- kg</div>
+                <div class="form-group">
+                    <label for="input-nombre">Nombre completo</label>
+                    <input
+                        type="text"
+                        id="input-nombre"
+                        placeholder="Ej: Juan Pérez"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="input-altura">Altura (en metros)</label>
+                    <input
+                        type="number"
+                        id="input-altura"
+                        placeholder="Ej: 1.75"
+                        step="0.01"
+                        min="1.00"
+                        max="2.50"
+                        autocomplete="off"
+                    >
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        Ingresa tu altura en metros (1.00 - 2.50)
+                    </small>
+                </div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="cerrarModalNombre()">Cancelar</button>
+                <button class="btn btn-primary" id="btn-guardar-nombre" onclick="guardarNombre()">
+                    Guardar y ver sugerencias
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de sugerencias personalizadas -->
+    <div id="modal-sugerencias" class="modal-overlay hidden">
+        <div class="modal modal-sugerencias">
+            <h2>Sugerencias personalizadas</h2>
+            <div class="modal-body">
+                <div id="sugerencias-loading" class="text-center" style="padding: 40px;">
+                    <div class="loading-spinner"></div>
+                    <p>Generando tus sugerencias personalizadas...</p>
+                </div>
+                <div id="sugerencias-contenido" class="sugerencias-contenido hidden"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="cerrarModalSugerencias()">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de recomendación guardada -->
+    <div id="modal-recomendacion-guardada" class="modal-overlay hidden">
+        <div class="modal modal-sugerencias">
+            <h2>Recomendación anterior</h2>
+            <div class="modal-body">
+                <div id="recomendacion-loading" class="text-center" style="padding: 40px;">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando recomendación...</p>
+                </div>
+                <div id="recomendacion-contenido" class="sugerencias-contenido hidden"></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="cerrarModalRecomendacionGuardada()">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('✅ Service Worker registrado:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('❌ Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
