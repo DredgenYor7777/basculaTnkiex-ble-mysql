@@ -1,4 +1,4 @@
-# 📊 Dashboard de Báscula con Claude AI
+# 📊 Dashboard de Báscula con Claude AI (Se elimino Claude AI por creditos insuficientes)
 
 Sistema completo para monitorear peso corporal en tiempo real desde una báscula Bluetooth (OKOK), con dashboard web interactivo y **chatbot inteligente powered by Claude (Anthropic)**.
 
